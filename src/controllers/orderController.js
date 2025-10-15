@@ -1,8 +1,23 @@
 import Order from '../models/Order.js';
+import Rider from '../models/Rider.js';
+
+const PLATFORM_COMMISSION_RATE = 0.15;
+const DELIVERY_FEE_RIDER_SHARE = 0.80;
 
 export const createOrder = async (req, res) => {
   try {
-    const order = await Order.create({ ...req.body, user: req.user.id });
+    const platformCommission = req.body.totalAmount * PLATFORM_COMMISSION_RATE;
+    const restaurantAmount = req.body.totalAmount - platformCommission;
+    const riderEarnings = req.body.deliveryFee * DELIVERY_FEE_RIDER_SHARE;
+
+    const order = await Order.create({
+      ...req.body,
+      user: req.user.id,
+      platformCommission,
+      restaurantAmount,
+      riderEarnings,
+    });
+
     res.status(201).json({ success: true, order });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -57,6 +72,11 @@ export const updateOrderStatus = async (req, res) => {
 
     if (status === 'delivered') {
       order.actualDeliveryTime = new Date();
+      if (order.rider) {
+        await Rider.findByIdAndUpdate(order.rider, {
+          $inc: { totalEarnings: order.riderEarnings, completedDeliveries: 1 },
+        });
+      }
     }
 
     await order.save();

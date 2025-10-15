@@ -3,9 +3,9 @@ import Restaurant from '../models/Restaurant.js';
 
 export const createReel = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findOne({ _id: req.body.restaurant, owner: req.user.id });
-    if (!restaurant || !restaurant.isVerified) {
-      return res.status(403).json({ message: 'Only verified restaurant owners can create reels' });
+    const restaurant = await Restaurant.findById(req.body.restaurant);
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
     }
 
     const reel = await Reel.create({ ...req.body, creator: req.user.id });
@@ -84,6 +84,65 @@ export const addComment = async (req, res) => {
 
     const populatedReel = await Reel.findById(reel._id).populate('comments.user', 'name avatar');
     res.json({ success: true, comments: populatedReel.comments });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const saveReel = async (req, res) => {
+  try {
+    const reel = await Reel.findById(req.params.id);
+    if (!reel) {
+      return res.status(404).json({ message: 'Reel not found' });
+    }
+
+    const index = reel.saves.indexOf(req.user.id);
+    if (index > -1) {
+      reel.saves.splice(index, 1);
+    } else {
+      reel.saves.push(req.user.id);
+    }
+
+    await reel.save();
+    res.json({ success: true, saved: index === -1 });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const shareReel = async (req, res) => {
+  try {
+    const reel = await Reel.findById(req.params.id);
+    if (!reel) {
+      return res.status(404).json({ message: 'Reel not found' });
+    }
+
+    reel.shares += 1;
+    await reel.save();
+
+    res.json({ success: true, shares: reel.shares });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getReelAnalytics = async (req, res) => {
+  try {
+    const reel = await Reel.findById(req.params.id);
+    if (!reel) {
+      return res.status(404).json({ message: 'Reel not found' });
+    }
+
+    res.json({
+      success: true,
+      analytics: {
+        views: reel.views,
+        likes: reel.likes.length,
+        saves: reel.saves.length,
+        shares: reel.shares,
+        comments: reel.comments.length,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

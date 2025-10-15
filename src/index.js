@@ -18,6 +18,11 @@ import restaurantRoutes from './routes/restaurantRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import reelRoutes from './routes/reelRoutes.js';
+import riderRoutes from './routes/riderRoutes.js';
+import offerRoutes from './routes/offerRoutes.js';
+import socialRoutes from './routes/socialRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 dotenv.config();
 
@@ -53,6 +58,11 @@ app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reels', reelRoutes);
+app.use('/api/riders', riderRoutes);
+app.use('/api/offers', offerRoutes);
+app.use('/api/social', socialRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 io.on('connection', socket => {
   logger.info(`Socket connected: ${socket.id}`);
@@ -63,6 +73,10 @@ io.on('connection', socket => {
 
   socket.on('order-update', data => {
     io.to(`order-${data.orderId}`).emit('order-status-changed', data);
+  });
+
+  socket.on('rider-location-update', data => {
+    io.to(`order-${data.orderId}`).emit('rider-location-changed', data);
   });
 
   socket.on('disconnect', () => {

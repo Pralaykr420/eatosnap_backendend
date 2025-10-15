@@ -35,9 +35,13 @@ const restaurantSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true },
     isPureVeg: { type: Boolean, default: false },
     tags: [String],
-    fssaiNumber: { type: String },
-    fssaiCertificate: { type: String },
+    fssaiNumber: { type: String, required: true, unique: true },
+    fssaiCertificate: { type: String, required: true },
+    fssaiExpiryDate: { type: Date, required: true },
     isFssaiVerified: { type: Boolean, default: false },
+    fssaiVerifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    fssaiVerifiedAt: { type: Date },
+    fssaiRejectionReason: { type: String },
   },
   { timestamps: true }
 );

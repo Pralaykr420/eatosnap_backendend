@@ -10,6 +10,8 @@ const reelSchema = new mongoose.Schema(
     tags: [String],
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    saves: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    shares: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     comments: [
       {
