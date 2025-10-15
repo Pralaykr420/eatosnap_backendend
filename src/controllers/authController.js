@@ -84,12 +84,3 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-export const googleCallback = async (req, res) => {
-  try {
-    const token = generateToken(req.user._id);
-    res.redirect(`${process.env.CLIENT_URL}/auth/google/success?token=${token}&user=${JSON.stringify({ id: req.user._id, name: req.user.name, email: req.user.email, role: req.user.role })}`);
-  } catch (error) {
-    res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
-  }
-};

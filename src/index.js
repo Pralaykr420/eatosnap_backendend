@@ -5,10 +5,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
-import session from 'express-session';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import passport from './config/passport.js';
 
 import connectDB from './config/db.js';
 import logger from './utils/logger.js';
@@ -43,9 +41,6 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(mongoSanitize());
-app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
 app.use('/api', limiter);
 
 app.get('/', (req, res) => {

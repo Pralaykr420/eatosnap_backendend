@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     isEmailVerified: { type: Boolean, default: false },
     emailOTP: { type: String },
     otpExpiry: { type: Date },
-    googleId: { type: String, unique: true, sparse: true },
+
     avatar: { type: String, default: '' },
     addresses: [
       {
