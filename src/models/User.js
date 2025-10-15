@@ -9,10 +9,9 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, required: true },
     role: { type: String, enum: ['user', 'seller'], default: 'user' },
     isEmailVerified: { type: Boolean, default: false },
-    isPhoneVerified: { type: Boolean, default: false },
     emailOTP: { type: String },
-    phoneOTP: { type: String },
     otpExpiry: { type: Date },
+    googleId: { type: String, unique: true, sparse: true },
     avatar: { type: String, default: '' },
     addresses: [
       {
