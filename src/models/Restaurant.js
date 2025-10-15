@@ -35,6 +35,9 @@ const restaurantSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true },
     isPureVeg: { type: Boolean, default: false },
     tags: [String],
+    fssaiNumber: { type: String },
+    fssaiCertificate: { type: String },
+    isFssaiVerified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

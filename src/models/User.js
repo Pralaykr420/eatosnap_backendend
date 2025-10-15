@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 6 },
     phone: { type: String, required: true },
     role: { type: String, enum: ['user', 'seller'], default: 'user' },
+    isEmailVerified: { type: Boolean, default: false },
+    isPhoneVerified: { type: Boolean, default: false },
+    emailOTP: { type: String },
+    phoneOTP: { type: String },
+    otpExpiry: { type: Date },
     avatar: { type: String, default: '' },
     addresses: [
       {

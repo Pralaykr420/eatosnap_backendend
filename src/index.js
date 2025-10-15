@@ -13,6 +13,7 @@ import logger from './utils/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 import authRoutes from './routes/authRoutes.js';
+import verificationRoutes from './routes/verificationRoutes.js';
 import restaurantRoutes from './routes/restaurantRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
@@ -47,6 +48,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/verification', verificationRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);

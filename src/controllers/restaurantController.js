@@ -2,8 +2,23 @@ import Restaurant from '../models/Restaurant.js';
 
 export const createRestaurant = async (req, res) => {
   try {
-    const restaurant = await Restaurant.create({ ...req.body, owner: req.user.id });
-    res.status(201).json({ success: true, restaurant });
+    const { fssaiNumber, fssaiCertificate } = req.body;
+    
+    if (!fssaiNumber || !fssaiCertificate) {
+      return res.status(400).json({ message: 'FSSAI certificate and number are required' });
+    }
+
+    const restaurant = await Restaurant.create({ 
+      ...req.body, 
+      owner: req.user.id,
+      isFssaiVerified: false
+    });
+    
+    res.status(201).json({ 
+      success: true, 
+      restaurant,
+      message: 'Restaurant created. FSSAI verification pending.'
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
