@@ -42,7 +42,7 @@ export const verifyRestaurant = async (req, res) => {
 
 export const getPendingRiders = async (req, res) => {
   try {
-    const riders = await Rider.find({ isVerified: false })
+    const riders = await Rider.find({ isAadharVerified: false })
       .populate('user', 'name email phone')
       .sort('-createdAt');
 
@@ -62,7 +62,7 @@ export const verifyRider = async (req, res) => {
       return res.status(404).json({ message: 'Rider not found' });
     }
 
-    rider.isVerified = approved;
+    rider.isAadharVerified = approved;
     await rider.save();
 
     res.json({ success: true, rider });

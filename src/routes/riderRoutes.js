@@ -13,13 +13,13 @@ import { protect, restrictTo } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/register', protect, restrictTo('rider'), registerRider);
-router.post('/toggle-active', protect, restrictTo('rider'), toggleActive);
-router.put('/location', protect, restrictTo('rider'), updateLocation);
-router.get('/available-orders', protect, restrictTo('rider'), getAvailableOrders);
-router.post('/accept-order', protect, restrictTo('rider'), acceptOrder);
-router.post('/reject-order', protect, restrictTo('rider'), rejectOrder);
-router.put('/order-status', protect, restrictTo('rider'), updateOrderStatus);
-router.get('/profile', protect, restrictTo('rider'), getRiderProfile);
+router.post('/register', protect, registerRider);
+router.put('/toggle-active', protect, toggleActive);
+router.put('/update-location', protect, updateLocation);
+router.get('/available-orders', protect, getAvailableOrders);
+router.put('/accept-order/:orderId', protect, acceptOrder);
+router.put('/reject-order/:orderId', protect, rejectOrder);
+router.put('/update-delivery-status/:orderId', protect, updateOrderStatus);
+router.get('/profile', protect, getRiderProfile);
 
 export default router;

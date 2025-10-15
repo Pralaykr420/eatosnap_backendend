@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 export const followUser = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     if (userId === req.user.id) {
       return res.status(400).json({ message: 'Cannot follow yourself' });
@@ -23,7 +23,7 @@ export const followUser = async (req, res) => {
 
 export const unfollowUser = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     await Follow.deleteOne({ follower: req.user.id, following: userId });
     res.json({ success: true, message: 'Unfollowed successfully' });
@@ -34,7 +34,7 @@ export const unfollowUser = async (req, res) => {
 
 export const getFollowers = async (req, res) => {
   try {
-    const followers = await Follow.find({ following: req.params.userId })
+    const followers = await Follow.find({ following: req.user.id })
       .populate('follower', 'name avatar')
       .sort('-createdAt');
 
@@ -46,7 +46,7 @@ export const getFollowers = async (req, res) => {
 
 export const getFollowing = async (req, res) => {
   try {
-    const following = await Follow.find({ follower: req.params.userId })
+    const following = await Follow.find({ follower: req.user.id })
       .populate('following', 'name avatar')
       .sort('-createdAt');
 

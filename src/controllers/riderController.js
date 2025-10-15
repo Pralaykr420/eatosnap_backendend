@@ -106,7 +106,7 @@ export const getAvailableOrders = async (req, res) => {
 
 export const acceptOrder = async (req, res) => {
   try {
-    const { orderId } = req.body;
+    const { orderId } = req.params;
     const rider = await Rider.findOne({ user: req.user.id });
 
     if (!rider || !rider.isAvailable) {
@@ -134,7 +134,7 @@ export const acceptOrder = async (req, res) => {
 
 export const rejectOrder = async (req, res) => {
   try {
-    const { orderId } = req.body;
+    const { orderId } = req.params;
     res.json({ success: true, message: 'Order rejected' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -143,7 +143,8 @@ export const rejectOrder = async (req, res) => {
 
 export const updateOrderStatus = async (req, res) => {
   try {
-    const { orderId, status } = req.body;
+    const { orderId } = req.params;
+    const { status } = req.body;
     const rider = await Rider.findOne({ user: req.user.id });
 
     const order = await Order.findOne({ _id: orderId, rider: rider._id });
