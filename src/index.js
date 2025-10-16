@@ -11,6 +11,7 @@ import { createServer } from 'http';
 import connectDB from './config/db.js';
 import logger from './utils/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { testEmailConnection } from './services/emailService.js';
 
 import authRoutes from './routes/authRoutes.js';
 import verificationRoutes from './routes/verificationRoutes.js';
@@ -33,6 +34,14 @@ const io = new Server(httpServer, {
 });
 
 connectDB();
+
+testEmailConnection().then(success => {
+  if (success) {
+    logger.info('✅ Email service ready');
+  } else {
+    logger.error('❌ Email service failed - check credentials');
+  }
+});
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
