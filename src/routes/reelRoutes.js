@@ -21,7 +21,7 @@ router.route('/:id').get(getReel).delete(protect, deleteReel);
 router.post('/:id/like', protect, likeReel);
 router.post('/:id/comment', protect, addComment);
 router.post('/:id/save', protect, saveReel);
-router.post('/:id/share', protect, shareReel);
+router.post('/:id/share', shareReel); // Public - no login needed
 router.get('/:id/analytics', protect, getReelAnalytics);
 
 export default router;
