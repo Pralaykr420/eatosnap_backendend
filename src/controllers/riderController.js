@@ -90,12 +90,12 @@ export const getAvailableOrders = async (req, res) => {
     }
 
     const orders = await Order.find({
-      orderStatus: 'confirmed',
+      orderStatus: 'ready',
       riderStatus: 'pending',
       rider: null,
     })
       .populate('restaurant', 'name address phone')
-      .populate('user', 'name phone')
+      .populate('user', 'name phone email')
       .sort('-createdAt');
 
     res.json({ success: true, orders });
