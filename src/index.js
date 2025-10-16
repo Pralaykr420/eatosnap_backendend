@@ -35,13 +35,13 @@ const io = new Server(httpServer, {
 
 connectDB();
 
-testEmailConnection().then(success => {
-  if (success) {
-    logger.info('✅ Email service ready');
-  } else {
-    logger.error('❌ Email service failed - check credentials');
-  }
-});
+setTimeout(() => {
+  testEmailConnection().then(success => {
+    if (!success) {
+      logger.warn('⚠️ Email service unavailable - may be blocked by hosting provider');
+    }
+  });
+}, 5000);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
