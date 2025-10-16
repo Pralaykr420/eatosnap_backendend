@@ -26,16 +26,24 @@ export const register = async (req, res) => {
 
     try {
       await sendOTPEmail(email, emailOTP);
+      console.log(`✅ OTP sent to ${email}: ${emailOTP}`);
+      res.status(201).json({
+        success: true,
+        message: 'Registration successful. OTP sent to your email. Check spam folder.',
+        userId: user._id,
+        email: user.email,
+      });
     } catch (error) {
-      console.log('Email send failed:', error.message);
+      console.error('❌ Email send failed:', error.message);
+      // Return OTP in response for testing if email fails
+      res.status(201).json({
+        success: true,
+        message: 'Registration successful. Email service error. Use this OTP:',
+        userId: user._id,
+        email: user.email,
+        otp: emailOTP, // TEMPORARY: Remove in production
+      });
     }
-
-    res.status(201).json({
-      success: true,
-      message: 'Registration successful. Please verify your email.',
-      userId: user._id,
-      email: user.email,
-    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

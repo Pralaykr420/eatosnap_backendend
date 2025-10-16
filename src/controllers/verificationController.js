@@ -55,9 +55,19 @@ export const resendEmailOTP = async (req, res) => {
     user.otpExpiry = otpExpiry;
     await user.save();
 
-    await sendOTPEmail(user.email, emailOTP);
-
-    res.json({ success: true, message: 'OTP sent to email' });
+    try {
+      await sendOTPEmail(user.email, emailOTP);
+      console.log(`✅ OTP resent to ${user.email}: ${emailOTP}`);
+      res.json({ success: true, message: 'OTP sent to email. Check spam folder if not received.' });
+    } catch (emailError) {
+      console.error('❌ Email send failed:', emailError.message);
+      // Return OTP in response for testing (REMOVE IN PRODUCTION)
+      res.json({ 
+        success: true, 
+        message: 'Email service error. Use this OTP for testing:', 
+        otp: emailOTP 
+      });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
