@@ -33,6 +33,8 @@ const io = new Server(httpServer, {
   cors: { origin: '*', credentials: true },
 });
 
+app.set('trust proxy', 1);
+
 connectDB();
 
 setTimeout(() => {
