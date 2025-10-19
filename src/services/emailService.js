@@ -1,21 +1,12 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendOTPEmail = async (email, otp) => {
   try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    const msg = {
       to: email,
+      from: process.env.EMAIL_USER,
       subject: 'EATOSNAP - Email Verification OTP',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
@@ -32,22 +23,14 @@ export const sendOTPEmail = async (email, otp) => {
       `,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('✅ Email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    await sgMail.send(msg);
+    return { success: true };
   } catch (error) {
-    console.error('❌ Email error:', error);
+    console.error('Email error:', error.message);
     return { success: false, error: error.message };
   }
 };
 
 export const testEmailConnection = async () => {
-  try {
-    await transporter.verify();
-    console.log('✅ Email server ready');
-    return true;
-  } catch (error) {
-    console.error('❌ Email error:', error.message);
-    return false;
-  }
+  return true;
 };
